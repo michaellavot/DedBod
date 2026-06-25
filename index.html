@@ -1,0 +1,36 @@
+
+<!doctype html><html lang="he" dir="rtl"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>DedBod</title><link rel="manifest" href="manifest.json"><link rel="stylesheet" href="style.css">
+<meta name="theme-color" content="#080b12"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="DedBod"><link rel="apple-touch-icon" href="dedbod_icon_192.png">
+</head><body>
+<div class="saveIcon" id="saveIcon">✓</div><button id="installPwaBtn" class="installPwaBtn" onclick="installPwa()">התקן כאפליקציה</button>
+<div class="app"><div class="top"><div class="brand"><div class="logo"><img src="dedbod_icon_512.png" alt="DedBod"></div><div><h1>DedBod</h1><div class="s">בסיס חדש · <span class="version">v2.0.0</span></div></div></div></div>
+
+<section id="sDashboard">
+<div class="hero"><div class="heroTop"><div><div class="small">משקל נוכחי</div><div class="big" id="heroWeight">96.0</div></div><div style="text-align:left"><div class="small">יעד</div><div style="font-size:25px;font-weight:900">88.0 ק״ג</div></div></div><div class="progress"><div class="bar" id="heroBar"></div></div><div class="stats"><div class="stat"><b id="lostKg">0.0</b><span>ק״ג ירדו</span></div><div class="stat"><b id="leftKg">8.0</b><span>ק״ג נשארו</span></div><div class="stat"><b id="streak">0</b><span>ימים שמורים</span></div></div></div>
+<div class="card"><h2>ציון יומי <span class="badge" id="todayBadge">לא נשמר</span></h2><div class="small" id="nextWeighText" style="margin-bottom:10px"></div><div class="scoreRing" id="scoreRing"><div class="scoreInner"><b id="scoreText">0%</b></div></div><div class="meta" id="scoreMeta"></div></div>
+<div class="card"><h2>גרף משקל</h2><canvas id="chart" width="800" height="300"></canvas></div>
+</section>
+
+<section id="sToday" class="hidden">
+<div class="card"><h2>היום <span class="badge" id="macroBadge">0 גרם</span></h2><div><label>תאריך</label><input id="date" type="date"></div><div class="meta"><span class="chip ok" id="todayProteinChip">חלבון: 0 גרם</span><span class="chip" id="todayCalChip">קלוריות: 0</span></div></div>
+<div class="card"><h2>בחר ארוחה</h2><div class="mealGrid">
+<div class="mealTile" id="tile_pre" onclick="openMealScreen('pre')"><div><div class="emoji">🏋️</div><b>לפני אימון</b></div><span id="tile_pre_text">לא נשמר</span></div>
+<div class="mealTile" id="tile_shake" onclick="openMealScreen('shake')"><div><div class="emoji">🥤</div><b>שייק אחרי אימון</b></div><span id="tile_shake_text">לא נשמר</span></div>
+<div class="mealTile" id="tile_b" onclick="openMealScreen('b')"><div><div class="emoji">🍳</div><b>בוקר בעבודה</b></div><span id="tile_b_text">לא נשמר</span></div>
+<div class="mealTile" id="tile_l" onclick="openMealScreen('l')"><div><div class="emoji">🍚</div><b>צהריים בעבודה</b></div><span id="tile_l_text">לא נשמר</span></div>
+<div class="mealTile" id="tile_d" onclick="openMealScreen('d')"><div><div class="emoji">🥩</div><b>ערב בבית</b></div><span id="tile_d_text">לא נשמר</span></div>
+<div class="mealTile" id="tile_s" onclick="openMealScreen('s')"><div><div class="emoji">🥛</div><b>ערב שני</b></div><span id="tile_s_text">לא נשמר</span></div>
+</div></div><div class="card"><h2>הערות יומיות</h2><textarea id="notes"></textarea><div class="row" style="margin-top:12px"><button class="btn" onclick="saveDay()">שמור את כל היום</button><button class="btn2" onclick="loadDay()">טען יום</button></div></div>
+</section>
+
+<section id="sMealDetail" class="hidden"><div class="card"><div class="detailTop"><button class="backBtn" onclick="backToToday()">← חזרה</button><div class="detailTitle" id="detailTitle">ארוחה</div></div><div id="mealDetailContent"></div><div id="mealDetailMeta" class="meta"></div><button class="btn" style="margin-top:16px" onclick="saveCurrentMeal()">שמור ארוחה</button></div></section>
+<section id="sWeight" class="hidden"><div class="card"><h2>שקילה שבועית</h2><div class="row"><div><label>תאריך</label><input id="wdate" type="date"></div><div><label>שבוע אוטומטי</label><input id="week" type="number" readonly></div><div><label>משקל</label><input id="weight" type="number" step="0.1"></div></div><div class="hint">השקילה השבועית: יום שישי 04:05</div><button class="btn" style="margin-top:12px" onclick="saveWeight()">שמור שקילה</button></div><div class="card"><h2>טבלת שקילות</h2><div id="weightTable"></div></div></section>
+<section id="sMeals" class="hidden"><div class="card"><h2>מאגר רכיבים</h2><div id="mealBank"></div></div></section>
+<section id="sSettings" class="hidden"><div class="card"><h2>גיבוי נתונים</h2><div class="backupActions"><button class="btn" onclick="exportBackup()">ייצוא גיבוי</button><button class="btn2" onclick="document.getElementById('backupFileInput').click()">ייבוא גיבוי</button></div><input id="backupFileInput" class="fileInputHidden" type="file" accept="application/json,.json" onchange="importBackupFile(event)"><div class="hint">שמור את קובץ הגיבוי ב־Google Drive.</div></div>
+<div class="card"><h2>הגדרות</h2><div class="row"><div><label>משקל התחלה</label><input id="startWeight" type="number" step="0.1" value="96"></div><div><label>משקל יעד</label><input id="targetWeight" type="number" step="0.1" value="88"></div><div><label>תאריך התחלה</label><input id="startDate" type="date"></div><div><label>גרסה</label><input value="DedBod v2.0.0" readonly></div></div><button class="btn" style="margin-top:12px" onclick="saveSettings()">שמור הגדרות</button><button class="btn2" style="margin-top:10px" onclick="enableNotifications()">הפעל התראת שקילה</button><button class="danger" style="margin-top:10px" onclick="clearAll()">איפוס נתונים</button></div>
+<div class="card"><h2>התקנה כאפליקציה</h2><div class="hint">בכרום: תפריט ⋮ → התקן אפליקציה / הוסף למסך הבית.</div></div></section>
+</div>
+<nav class="tabs"><button class="tab active" onclick="show('Dashboard',this)"><span class="icon">🏠</span>בית</button><button class="tab" onclick="show('Today',this)"><span class="icon">🍽️</span>היום</button><button class="tab" onclick="show('Weight',this)"><span class="icon">⚖️</span>שקילה</button><button class="tab" onclick="show('Meals',this)"><span class="icon">📋</span>רכיבים</button><button class="tab" onclick="show('Settings',this)"><span class="icon">⚙️</span>עוד</button></nav>
+<script src="app.js?v=2.0.0"></script></body></html>
